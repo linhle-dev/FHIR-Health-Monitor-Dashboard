@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazorise.Charts" Version="0.9.0.3" />
+    <PackageReference Include="BlazorStyled" Version="3.0.0" />
+    <PackageReference Include="Hl7.Fhir.R4" Version="1.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Client\FIT3077.Client.csproj" />
+    <ProjectReference Include="..\Shared\FIT3077.Shared.csproj" />
+  </ItemGroup>
+
+
+</Project>

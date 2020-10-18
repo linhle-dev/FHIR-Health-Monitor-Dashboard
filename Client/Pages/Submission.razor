@@ -1,0 +1,54 @@
+﻿@using FIT3077.Shared.Models;
+<style>
+    .fas.spinning {
+        animation: spin 1s infinite linear;
+    }
+
+    @@keyframes spin {
+    from {
+        transform: scale(1) rotate(0deg);
+    }
+
+    to {
+        transform: scale(1) rotate(360deg);
+    }
+    }
+
+
+    .fa-left {
+        margin-right: 7px;
+    }
+
+    .btn.search {
+        width: 10rem;
+    }
+
+</style>
+<div>
+    <EditForm Model="@parameter" class="input-group">
+        <InputText class="px-2" id="pracId" placeholder="Practitioner identifier" @bind-Value="parameter.Value" />
+        <div class="input-group-append">
+            @if (IsSearching)
+            {
+                <button class="btn btn-dark" disabled><span class='fa-left fas fa-sync-alt spinning'></span>Searching...</button>
+            }
+            else
+            {
+                <button class="btn btn-dark " @onclick="() => OnSearch.InvokeAsync(parameter)">Search</button>
+            }
+        </div>
+    </EditForm>
+
+</div>
+@code {
+    [Parameter]
+    public EventCallback<InputParameter> OnSearch { get; set; }
+
+    [Parameter]
+    public bool IsSearching { get; set; }
+
+    private InputParameter parameter = new InputParameter();
+
+
+
+}

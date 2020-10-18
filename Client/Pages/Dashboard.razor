@@ -1,0 +1,119 @@
+﻿@page "/"
+@using FIT3077.Client.Services
+@inject IDashboardService DashboardService
+@implements IDisposable
+
+@* This razor component page is the main page that contains many other razor components*@
+<style>
+    .card_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 50px;
+        background-color: #394263;
+        color: #FFF;
+    }
+</style>
+<div class="top-row" style="justify-content: space-between;position: relative">
+    <ThresholdSubmission OnClickHighBloodPressure="DashboardService.ProcessHighBloodInput"></ThresholdSubmission>
+    <Submission OnSearch="DashboardService.Search" IsSearching="DashboardService.SearchInProgress"></Submission>
+</div>
+
+
+<div>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-3">
+                <div class="bg-light" style="height: 350px;">
+                    <div class="card_header">
+                        <div class="pl-3"><strong>Patient List</strong></div>
+                    </div>
+                    <div class="bg-light" style="overflow-y: auto; height:300px">
+                        <PatientList Patients="DashboardService.Patients" OnAdd="DashboardService.AddToMonitors" IsLoading="DashboardService.SearchInProgress"></PatientList>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-9 ">
+                <div class="bg-light" style=" height: 350px;">
+                    <div class="card_header">
+                        <div class="pl-3">
+                            <strong>Monitor List</strong>
+                        </div>
+                        <IntervalTimeSetting OnSetTime="DashboardService.SetTime"></IntervalTimeSetting>
+                    </div>
+                    <div class="bg-light" style="overflow-y: auto; height:300px">
+                        <MonitorList Monitors="DashboardService.Monitors" OnRemove="DashboardService.RemoveFromMonitors" OnMonitorRecord="DashboardService.ModifyRecordState">
+                        </MonitorList>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-6">
+                <div class="bg-light" style="height: 350px;">
+                    <div class="card_header">
+                        <div class="pl-3"><strong>Total Cholesterol Chart</strong></div>
+                    </div>
+                    <div class="bg-light" style="overflow-x: auto; max-height: 300px; max-width: 573.67px; margin: auto;">
+                        <TotalCholesterolChart Monitors="DashboardService.Monitors"></TotalCholesterolChart>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bg-light" style="height: 350px;">
+                    <div  class="card_header">
+                        <div class="pl-3"><strong>High Systolic Blood Pressure Patients</strong></div>
+                    </div>
+                    <div><HighSystolicObservationList Monitors="DashboardService.Monitors"></HighSystolicObservationList></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-light" style="height: 350px;">
+                    <div class="card_header">
+                        <div class="pl-3"><strong>High Systolic Chart</strong></div>
+                    </div>
+                    <div class="bg-light d-flex flex" style="overflow-x: auto;max-width:1493.18px">
+                        <HighSystolicChart Monitors="DashboardService.Monitors"></HighSystolicChart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+@code{
+
+    /// <summary>
+    /// This function is invoked when the component is initialized after having received its initial parameters from its parent component in SetParameters.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        //Create timer for interval update
+        DashboardService.CreateTimer();
+        DashboardService.t.Elapsed += async (s, e) =>
+        {
+            await DashboardService.Update();
+        };
+        DashboardService.t.Interval = 1000 * 60 * 5;
+        DashboardService.t.Start();
+        //Call StateHasChange and rerender components
+        DashboardService.OnChange += StateHasChanged;
+    }
+
+    /// <summary>
+    /// This function clears unmanaged resources
+    /// </summary>
+    public void Dispose()
+    {
+        DashboardService.OnChange -= StateHasChanged;
+    }
+
+}

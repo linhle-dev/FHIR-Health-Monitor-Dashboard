@@ -1,0 +1,38 @@
+﻿@model FHIR_FIT3077.ViewModels.PatientDetailsViewModel;
+@{
+    ViewData["Title"] = "PatientDisplay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Patient Details</h1>
+<h2>@Model.Name</h2>
+<table>
+    <tr>
+        <td><b>ID</b></td>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <td><b>Birthdate</b></td>
+        <td>@Model.Birthdate</td>
+    </tr>
+    <tr>
+        <td><b>Gender</b></td>
+        <td>@Model.Gender</td>
+    </tr>
+    <tr>
+        <td><b>Address</b></td>
+        <td>@Model.Address</td>
+    </tr>
+    <tr>
+        <td><b>City</b></td>
+        <td>@Model.City</td>
+    </tr>
+    <tr>
+        <td><b>State</b></td>
+        <td>@Model.State</td>
+    </tr>
+    <tr>
+        <td><b>Country</b></td>
+        <td>@Model.Country</td>
+    </tr>
+</table>

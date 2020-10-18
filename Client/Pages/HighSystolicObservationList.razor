@@ -1,0 +1,36 @@
+﻿@using FIT3077.Shared.Models
+
+@if (Monitors != null)
+{
+    @foreach (var m in Monitors)
+    {
+        if (m.SystolicFlag == true && m.MeasurementList.BloodPressureRecords.IsMonitored)
+        {
+            string patientsObservation = "";
+            patientsObservation += m.PatientName;
+            List<BloodPressureRecord> bloodRecords = m.MeasurementList.BloodPressureRecords.Records;
+            for (int i = 0; i < bloodRecords.Count; i++)
+            {
+                if (i == 0)
+                {
+                    patientsObservation += ": " + bloodRecords[i].SystolicValue + " (" + bloodRecords[i].Date + "),";
+                }
+                else if (i > 0 && i < bloodRecords.Count - 1)
+                {
+                    patientsObservation += " " + bloodRecords[i].SystolicValue + " (" + bloodRecords[i].Date + "),";
+                }
+                else
+                {
+                    patientsObservation += " " + bloodRecords[i].SystolicValue + " (" + bloodRecords[i].Date + ")";
+                }
+            }
+            <ul>
+                <p> @patientsObservation</p>
+            </ul>
+        }
+    }
+}
+@code {
+    [Parameter]
+    public IReadOnlyList<Monitor> Monitors { get; set; }
+}

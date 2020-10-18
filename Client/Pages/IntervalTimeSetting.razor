@@ -1,0 +1,20 @@
+﻿@using FIT3077.Shared.Models
+<div>
+    <EditForm Model="@parameter" class="input-group px-3">
+        <InputText class="px-2" placeholder="5 minutes" @bind-Value="parameter.Value" />
+        <div class="input-group-append">
+            <button class="btn btn btn-outline-light " @onclick="() => OnSetTime.InvokeAsync(parameter)">Set</button>
+            
+        </div>
+    </EditForm>
+</div>
+@code {
+    [Parameter]
+    public EventCallback<InputParameter> OnSetTime { get; set; }
+
+
+    private InputParameter parameter = new InputParameter();
+
+
+
+}

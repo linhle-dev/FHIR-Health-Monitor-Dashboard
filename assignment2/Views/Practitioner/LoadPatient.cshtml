@@ -1,0 +1,101 @@
+﻿@using Hl7.Fhir.Model
+@using FHIR_FIT3077.ViewModel
+@model FHIR_FIT3077.ViewModel.PatientViewModel;
+@{
+    ViewData["Title"] = "Patients";
+    string pracId = (string)ViewData["PractitionerId"];
+}
+<html>
+<body>
+    <div style="display:flex; flex-direction: row">
+        <h1>List</h1>
+    </div>
+
+    <form method="post">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Patient</th>
+                <th>Monitor</th>
+            </tr>
+
+            @foreach (KeyValuePair<string, PatientModel> patient in Model.PatientList)
+            {
+                <tr>
+                    <td><p>@patient.Key</p></td>
+                    <td><p>@patient.Value.Name</p></td>
+                    <asp:CheckBox ID="DraftCheckBox" runat="server" Text="Save as Draft?" />
+                    <td><input type="checkbox" id="@patient.Key" onchange="checkChanged(@patient.Key)" data-toggle='toggle' /></td>
+                </tr>
+            }
+        </table>
+    </form>
+
+<div>
+    <input type="text" name="interval" id="intervalInput" value="10"  />
+    </div>
+    <h2>Monitor</h2>
+
+    <div id="monitorView">
+        @if (Model.MonitorList != null && Model.MonitorList.Any())
+        {
+            <partial name="_MonitorSection" model="@Model" for="MonitorList" />
+        }
+    </div>
+
+</body>
+</html>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    var defaultInterval = setInterval(update, 100000);
+
+    $("#intervalInput").on("change",
+        function() {
+            clearInterval(defaultInterval);
+            defaultInterval = setInterval(update, $(this).val() * 1000);
+        });
+
+    function update() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Update", "Practitioner")',
+            data: { pracId: @pracId },
+            success: function(result) {
+                $("#monitorView").html(result);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    };
+
+    function checkChanged(id) {
+        if ($('#' + id).is(":checked")) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RegisterPatient", "Monitor")',
+                data: { Id: id, pracId: @pracId },
+                success: function(result) {
+                    $("#monitorView").html(result);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeregisterPatient", "Monitor")',
+                data: { Id: id, pracId: @pracId },
+                success: function(result) {
+                    $("#monitorView").html(result);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+        };
+    }
+</script>

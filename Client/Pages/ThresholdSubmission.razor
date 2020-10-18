@@ -1,0 +1,25 @@
+﻿@using FIT3077.Shared.Models;
+<div class="d-flex align-items-center">
+    <div style="display:inline-block" class="px-1">
+        <EditForm Model="@Value" class="input-group">
+            <div style="height: 40px;line-height: 40px;" class="px-1"><p>Systolic Value</p></div>
+            <InputNumber class="px-2" id="X" placeholder="Average Systolic Value" @bind-Value="Value.Systolic"/>
+        </EditForm>
+    </div>
+    <div style="display:inline-block" class="px-1">
+        <EditForm Model="@Value" class="input-group">
+            <div style="height: 40px;line-height: 40px;" class="px-1"><p>Diastolic Value</p></div>
+            <InputNumber class="px-2" id="Y" placeholder="Average Diastolic Value" @bind-Value="Value.Diastolic" />
+        </EditForm>
+    </div>
+    <div style="display:inline-block" class="px-1">
+        <button class="btn btn-dark " @onclick="() => OnClickHighBloodPressure.InvokeAsync(Value)">Enter</button>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public EventCallback<SysDiastolicThreshold> OnClickHighBloodPressure { get; set; }
+
+    public SysDiastolicThreshold Value { get; set; } = new SysDiastolicThreshold();
+
+}

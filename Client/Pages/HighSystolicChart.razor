@@ -1,0 +1,16 @@
+﻿@using FIT3077.Shared.Models
+
+@if (Monitors != null)
+{
+    @foreach (var m in Monitors)
+    {
+        if (m.SystolicFlag == true && m.MeasurementList.BloodPressureRecords.IsMonitored == true)
+        {
+            <HighSystolicRender Monitor="m"></HighSystolicRender>
+        }
+    }
+}
+@code {
+    [Parameter]
+    public IReadOnlyList<Monitor> Monitors { get; set; }
+}

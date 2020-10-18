@@ -1,0 +1,11 @@
+﻿@using FIT3077.Shared.Models
+
+@if (Monitors != null)
+{
+    <TotalCholesterolRender Monitors="Monitors"></TotalCholesterolRender>
+}
+@code {
+    [Parameter]
+    public IReadOnlyList<Monitor> Monitors { get; set; }
+
+}

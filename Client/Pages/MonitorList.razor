@@ -1,0 +1,139 @@
+﻿@using FIT3077.Shared.Models
+<style>
+    .center {
+        text-align: center;
+    }
+</style>
+
+    <Table Narrow="true" Striped="true">
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell class="center">Name</TableHeaderCell>
+                <TableHeaderCell class="center">Monitor</TableHeaderCell>
+                <TableHeaderCell class="center">Cholesterol</TableHeaderCell>
+                <TableHeaderCell class="center">Time</TableHeaderCell>
+                <TableHeaderCell class="center">Monitor</TableHeaderCell>
+                <TableHeaderCell class="center">Systolic</TableHeaderCell>
+                <TableHeaderCell class="center">Diastolic</TableHeaderCell>
+                <TableHeaderCell class="center">Time</TableHeaderCell>
+                <TableHeaderCell class="center">Remove</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @if (Monitors != null)
+            {
+                @foreach (var monitor in Monitors)
+                {
+                    <TableRow>
+                        <TableRowCell class="center">
+                            @monitor.PatientName
+                        </TableRowCell>
+
+                        <TableRowCell class="center">
+                            <Check TValue="bool" Checked="monitor.MeasurementList.CholesterolRecords.IsMonitored" CheckedChanged="() => OnMonitorRecord.InvokeAsync(monitor.MeasurementList.CholesterolRecords)"></Check>
+                        </TableRowCell>
+
+                        @if (monitor.MeasurementList.CholesterolRecords.Records.Count > 0 && monitor.MeasurementList.CholesterolRecords.IsMonitored)
+                        {
+                            @if (monitor.CholFlag == true)
+                            {
+                                <TableRowCell Class="center">
+                                    <span style="color:red">@monitor.MeasurementList.CholesterolRecords.Records[0].CholesterolValue </span>
+                                </TableRowCell>
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.CholesterolRecords.Records[0].Date
+                                </TableRowCell>
+                            }
+                            else
+                            {
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.CholesterolRecords.Records[0].CholesterolValue 
+                                </TableRowCell>
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.CholesterolRecords.Records[0].Date
+                                </TableRowCell>
+                            }
+
+                        }
+                        else
+                        {
+                            <TableRowCell Class="center"></TableRowCell>
+                            <TableRowCell Class="center"></TableRowCell>
+                        }
+
+                        <TableRowCell class="center">
+                            <Check TValue="bool" Checked="monitor.MeasurementList.BloodPressureRecords.IsMonitored" CheckedChanged="()=>OnMonitorRecord.InvokeAsync(monitor.MeasurementList.BloodPressureRecords)"></Check>
+                        </TableRowCell>
+
+                        @if (monitor.MeasurementList.BloodPressureRecords.Records.Count > 0 && monitor.MeasurementList.BloodPressureRecords.IsMonitored)
+                        {
+
+                            @if (monitor.SystolicFlag == true && monitor.DiastolicFlag == true)
+                            {
+                                <TableRowCell Class="center">
+                                    <span style="color:red">@monitor.MeasurementList.BloodPressureRecords.Records[0].SystolicValue</span>
+                                </TableRowCell>
+                                <TableRowCell Class="center">
+                                    <span style="color:red">@monitor.MeasurementList.BloodPressureRecords.Records[0].DiastolicValue</span>
+                                </TableRowCell>
+                            }
+                            else if (monitor.SystolicFlag == true)
+                            {
+                                <TableRowCell Class="center">
+                                    <span style="color:red">@monitor.MeasurementList.BloodPressureRecords.Records[0].SystolicValue</span>
+                                </TableRowCell>
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.BloodPressureRecords.Records[0].DiastolicValue
+                                </TableRowCell>
+                            }
+                            else if (monitor.DiastolicFlag == true)
+                            {
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.BloodPressureRecords.Records[0].SystolicValue
+                                </TableRowCell>
+                                <TableRowCell Class="center">
+                                    <span style="color:red">@monitor.MeasurementList.BloodPressureRecords.Records[0].DiastolicValue</span>
+                                </TableRowCell>
+
+                            }
+                            else
+                            {
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.BloodPressureRecords.Records[0].SystolicValue
+                                </TableRowCell>
+                                <TableRowCell Class="center">
+                                    @monitor.MeasurementList.BloodPressureRecords.Records[0].DiastolicValue
+                                </TableRowCell>
+                            }
+
+                            <TableRowCell Class="center">
+                                @monitor.MeasurementList.BloodPressureRecords.Records[0].Date
+                            </TableRowCell>
+                        }
+                        else
+                        {
+                            <TableRowCell Class="center"></TableRowCell>
+                            <TableRowCell Class="center"></TableRowCell>
+                            <TableRowCell Class="center"></TableRowCell>
+                        }
+
+                        <TableRowCell class="center">
+                            <button class="btn btn-danger btn-sm" @onclick="() => OnRemove.InvokeAsync(monitor)">Remove</button>
+                        </TableRowCell>
+
+                    </TableRow>
+                }
+            }
+        </TableBody>
+    </Table>
+@code {
+    [Parameter]
+    public IReadOnlyList<Monitor> Monitors { get; set; }
+    [Parameter]
+    public EventCallback<Monitor> OnRemove { get; set; }
+    [Parameter]
+    public EventCallback<RecordList> OnMonitorRecord { get; set; }
+    
+
+    
+}
